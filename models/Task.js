@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+import { Schema, model } from 'mongoose';
 
-const TaskSchema = new mongoose.Schema({
+const TaskSchema = new Schema({
   title: {
     type: String,
     required: [true, 'Please provide a task title'],
@@ -30,7 +30,7 @@ const TaskSchema = new mongoose.Schema({
     type: Date
   },
   user: {
-    type: mongoose.Schema.ObjectId,
+    type: Schema.ObjectId,
     ref: 'User',
     required: true
   },
@@ -42,4 +42,4 @@ const TaskSchema = new mongoose.Schema({
 
 TaskSchema.index({ user: 1, dueDate: 1 });
 
-module.exports = mongoose.model('Task', TaskSchema);
+export default model('Task', TaskSchema);

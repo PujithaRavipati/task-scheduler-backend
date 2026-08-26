@@ -1,18 +1,18 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
+import express, { json } from 'express';
+import { connect } from 'mongoose';
+import cors from 'cors';
 require('dotenv').config();
 
-const authRoutes = require('./routes/auth.routes');
-const taskRoutes = require('./routes/task.routes');
+import authRoutes from './routes/auth.routes';
+import taskRoutes from './routes/task.routes';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors());
-app.use(express.json());
+app.use(json());
 
-await mongoose.connect(process.env.MONGODB_URI, {
+await connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })

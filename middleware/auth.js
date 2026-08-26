@@ -1,7 +1,7 @@
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+import { verify } from 'jsonwebtoken';
+import User from '../models/User';
 
-exports.protect = async (req, res, next) => {
+export async function protect(req, res, next) {
   let token;
 
   if (
@@ -19,7 +19,7 @@ exports.protect = async (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = verify(token, process.env.JWT_SECRET);
 
     req.user = await User.findById(decoded.id);
 
@@ -37,4 +37,4 @@ exports.protect = async (req, res, next) => {
       message: 'Not authorized to access this route'
     });
   }
-};
+}

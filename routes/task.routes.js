@@ -1,14 +1,14 @@
-const express = require('express');
-const router = express.Router();
-const Task = require('../models/Task');
-const { protect } = require('../middleware/auth');
+import { Router } from 'express';
+const router = Router();
+import { find, findById, create, findByIdAndUpdate, findByIdAndDelete } from '../models/Task';
+import { protect } from '../middleware/auth';
 
 // @route   GET /api/tasks
 // @desc    Get all tasks for a user
 // @access  Private
 router.get('/', protect, async (req, res) => {
   try {
-    const tasks = await Task.find({ user: req.user.id }).sort({ dueDate: 1 });
+    const tasks = await find({ user: req.user.id }).sort({ dueDate: 1 });
 
     res.status(200).json({
       success: true,
@@ -29,7 +29,7 @@ router.get('/', protect, async (req, res) => {
 // @access  Private
 router.get('/:id', protect, async (req, res) => {
   try {
-    const task = await Task.findById(req.params.id);
+    const task = await findById(req.params.id);
 
     if (!task) {
       return res.status(404).json({
@@ -72,7 +72,7 @@ router.post('/', protect, async (req, res) => {
     
     req.body.user = req.user.id;
 
-    const task = await Task.create(req.body);
+    const task = await create(req.body);
 
     res.status(201).json({
       success: true,
@@ -99,7 +99,7 @@ router.post('/', protect, async (req, res) => {
 // @access  Private
 router.put('/:id', protect, async (req, res) => {
   try {
-    let task = await Task.findById(req.params.id);
+    let task = await findById(req.params.id);
 
     if (!task) {
       return res.status(404).json({
@@ -115,7 +115,7 @@ router.put('/:id', protect, async (req, res) => {
       });
     }
 
-    task = await Task.findByIdAndUpdate(req.params.id, req.body, {
+    task = await findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true
     });
@@ -151,7 +151,7 @@ router.put('/:id', protect, async (req, res) => {
 // @access  Private
 router.delete('/:id', protect, async (req, res) => {
   try {
-    const task = await Task.findById(req.params.id);
+    const task = await findById(req.params.id);
 
     if (!task) {
       return res.status(404).json({
@@ -167,7 +167,7 @@ router.delete('/:id', protect, async (req, res) => {
       });
     }
 
-    await Task.findByIdAndDelete(req.params.id);
+    await findByIdAndDelete(req.params.id);
 
     res.status(200).json({
       success: true,
@@ -203,7 +203,7 @@ router.put('/:id/status', protect, async (req, res) => {
       });
     }
 
-    let task = await Task.findById(req.params.id);
+    let task = await findById(req.params.id);
 
     if (!task) {
       return res.status(404).json({
@@ -219,7 +219,7 @@ router.put('/:id/status', protect, async (req, res) => {
       });
     }
 
-    task = await Task.findByIdAndUpdate(
+    task = await findByIdAndUpdate(
       req.params.id,
       { status },
       {               
@@ -247,4 +247,4 @@ router.put('/:id/status', protect, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

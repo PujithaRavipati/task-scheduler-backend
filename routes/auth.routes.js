@@ -1,7 +1,7 @@
-const express = require('express');
-const router = express.Router();
-const User = require('../models/User');
-const { protect } = require('../middleware/auth');
+import { Router } from 'express';
+const router = Router();
+import { findOne, create, findById } from '../models/User';
+import { protect } from '../middleware/auth';
 
 // @route   POST /api/auth/register
 // @desc    Register user
@@ -10,7 +10,7 @@ router.post('/register', async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    let user = await User.findOne({ email });
+    let user = await findOne({ email });
 
     if (user) {
       return res.status(400).json({
@@ -19,7 +19,7 @@ router.post('/register', async (req, res) => {
       });
     }
 
-    user = await User.create({
+    user = await create({
       name,
       email,
       password
@@ -54,7 +54,7 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    const user = await User.findOne({ email }).select('+password');
+    const user = await findOne({ email }).select('+password');
 
     if (!user) {
       return res.status(401).json({
@@ -92,7 +92,7 @@ router.post('/login', async (req, res) => {
 // @access  Private
 router.get('/me', protect, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
+    const user = await findById(req.user.id);
 
     res.status(200).json({
       success: true,
@@ -107,4 +107,4 @@ router.get('/me', protect, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
